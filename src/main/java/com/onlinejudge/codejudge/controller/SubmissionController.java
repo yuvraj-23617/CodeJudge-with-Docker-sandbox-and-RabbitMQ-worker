@@ -7,6 +7,7 @@ import com.onlinejudge.codejudge.repository.ProblemRepository;
 import com.onlinejudge.codejudge.repository.SubmissionRepository;
 import com.onlinejudge.codejudge.service.JudgeService;
 import com.onlinejudge.codejudge.entity.TestCase;
+import com.onlinejudge.codejudge.service.SubmissionProducer;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -18,15 +19,18 @@ public class SubmissionController {
     private final SubmissionRepository submissionRepository;
     private final ProblemRepository problemRepository;
     private final JudgeService judgeService;
+    private final SubmissionProducer submissionProducer;
 
     public SubmissionController(
             SubmissionRepository submissionRepository,
             ProblemRepository problemRepository,
-            JudgeService judgeService) {
+            JudgeService judgeService,
+            SubmissionProducer submissionProducer) {
 
         this.submissionRepository = submissionRepository;
         this.problemRepository = problemRepository;
         this.judgeService = judgeService;
+        this.submissionProducer = submissionProducer;
     }
 
     @PostMapping("/run-python")
@@ -56,45 +60,15 @@ public class SubmissionController {
         submission.setMemoryUsed(0L);
         submission.setSubmittedAt(LocalDateTime.now());
 
-        for (TestCase tc : problem.getTestCases()) {
+        submission.setVerdict("PENDING");
 
-            String verdict =
-                    judgeService.judge(
-                            request.getLanguage(),
-                            request.getCode(),
-                            tc.getInput(),
-                            tc.getExpectedOutput()
-                    );
+        Submission savedSubmission =
+                submissionRepository.save(submission);
 
-            if (!verdict.equals("ACCEPTED")) {
+        submissionProducer.send(
+                savedSubmission.getId()
+        );
 
-                submission.setVerdict(verdict);
-
-                return submissionRepository.save(submission);
-            }
-        }
-
-
-        for (TestCase tc : problem.getTestCases()) {
-
-            String verdict =
-                    judgeService.judge(
-                            request.getLanguage(),
-                            request.getCode(),
-                            tc.getInput(),
-                            tc.getExpectedOutput()
-                    );
-
-            if (!verdict.equals("ACCEPTED")) {
-
-                submission.setVerdict(verdict);
-
-                return submissionRepository.save(submission);
-            }
-        }
-
-        submission.setVerdict("ACCEPTED");
-
-        return submissionRepository.save(submission);
+        return savedSubmission;
     }
 }
