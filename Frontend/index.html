@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeJudge Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark-900 text-gray-100 font-sans">
+
+<!-- Navbar -->
+<nav class="bg-dark-800 border-b border-dark-700 p-4 shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="#home" class="text-2xl font-bold text-blue-400 hover:text-blue-300 transition">CodeJudge</a>
+
+        <div class="flex items-center">
+            <!-- Dynamic Navigation Links (Injected via JS based on Role) -->
+            <div id="dynamicNavLinks" class="flex items-center space-x-6 mr-6"></div>
+
+            <!-- Auth Links (Hidden when logged in) -->
+            <div id="authLinks" class="relative">
+                <button onclick="toggleAuthDropdown()" class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700 transition font-semibold flex items-center space-x-2">
+                    <span>Account</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="authDropdown" class="hidden absolute right-0 mt-2 w-56 bg-dark-800 rounded-lg shadow-xl border border-dark-700 z-50">
+                    <div class="p-2">
+                        <a href="#login" onclick="closeAuthDropdown()" class="block px-4 py-2 text-gray-300 hover:bg-dark-700 rounded-lg transition">
+                            🔐 Login
+                        </a>
+                        <a href="#register" onclick="closeAuthDropdown()" class="block px-4 py-2 text-gray-300 hover:bg-dark-700 rounded-lg transition">
+                            ✨ Create Account
+                        </a>
+                        <div class="border-t border-dark-700 my-1"></div>
+                        <!-- Maps to the same login page, but visually separated -->
+                        <a href="#login" onclick="closeAuthDropdown()" class="block px-4 py-2 text-blue-400 hover:bg-dark-700 rounded-lg transition text-sm">
+                            👨‍💼 Admin Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Info & Logout (Shown when logged in) -->
+            <div id="userLinks" class="hidden items-center space-x-4">
+                <span id="welcomeMsg" class="text-gray-300 text-sm"></span>
+                <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm">Logout</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Area -->
+<main class="container mx-auto p-6">
+
+    <!-- 1. HOME VIEW -->
+    <section id="view-home" class="view min-h-[80vh] flex flex-col items-center justify-center text-center">
+        <h1 class="text-6xl font-extrabold mb-6 text-white">Master Your Coding Interview</h1>
+        <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">Practice coding, prepare for technical interviews, and land your dream job.</p>
+        <button onclick="handleStartSolving()" class="bg-blue-600 text-white px-10 py-5 rounded-lg text-xl font-semibold shadow-lg hover:bg-blue-700 transition transform hover:scale-105">Start Solving</button>
+    </section>
+
+    <!-- 2. LOGIN VIEW -->
+    <section id="view-login" class="view hidden max-w-md mx-auto mt-16 bg-dark-800 p-8 rounded-xl shadow-xl border border-dark-700">
+        <h2 class="text-3xl font-bold mb-6 text-center text-white">Login</h2>
+        <form onsubmit="event.preventDefault(); loginUser();">
+            <div class="mb-4">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Username</label>
+                <input type="text" id="loginUsername" placeholder="Enter your username" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Login</button>
+        </form>
+        <p class="mt-6 text-center text-gray-400">Don't have an account? <a href="#register" class="text-blue-400 font-semibold hover:underline">Register</a></p>
+        <p class="mt-2 text-center text-gray-500 text-sm">
+            <a href="#home" class="hover:text-gray-300">← Back to Home</a>
+        </p>
+    </section>
+
+    <!-- 3. REGISTER VIEW -->
+    <section id="view-register" class="view hidden max-w-md mx-auto mt-16 bg-dark-800 p-8 rounded-xl shadow-xl border border-dark-700">
+        <h2 class="text-3xl font-bold mb-6 text-center text-white">Create Account</h2>
+        <form onsubmit="event.preventDefault(); registerUser();">
+            <div class="mb-4">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Username</label>
+                <input type="text" id="regUsername" placeholder="Choose a username" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Email</label>
+                <input type="email" id="regEmail" placeholder="Enter your email" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-300 text-sm font-bold mb-2">Password</label>
+                <input type="password" id="regPassword" placeholder="Create a password" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
+            </div>
+            <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition">Register</button>
+        </form>
+        <p class="mt-6 text-center text-gray-400">Already have an account? <a href="#login" class="text-blue-400 font-semibold hover:underline">Login</a></p>
+        <p class="mt-2 text-center text-gray-500 text-sm">
+            <a href="#home" class="hover:text-gray-300">← Back to Home</a>
+        </p>
+    </section>
+
+    <!-- 4. PROBLEMS VIEW -->
+    <section id="view-problems" class="view hidden mt-10">
+        <h2 class="text-3xl font-bold mb-6 text-white">Problems</h2>
+        <div class="bg-dark-800 rounded-xl shadow-xl overflow-hidden border border-dark-700">
+            <table class="w-full text-left">
+                <thead class="bg-dark-700 text-gray-300 uppercase text-sm">
+                <tr>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Title</th>
+                    <th class="p-4">Difficulty</th>
+                    <th class="p-4">Action</th>
+                </tr>
+                </thead>
+                <tbody id="problemsTableBody" class="divide-y divide-dark-700">
+                <tr><td colspan="4" class="p-4 text-center text-gray-400">Loading problems...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="editorArea" class="hidden mt-8 bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
+            <h3 class="text-2xl font-bold mb-2 text-white" id="problemTitle">Problem Title</h3>
+            <p id="problemDesc" class="text-gray-400 mb-4"></p>
+            <textarea id="codeEditor" class="w-full h-64 p-4 border border-dark-600 rounded-lg font-mono text-sm bg-dark-900 text-green-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="// Write your code here..."></textarea>
+            <div class="mt-4 flex items-center space-x-4">
+                <select id="languageSelect" class="p-3 border border-dark-600 rounded-lg bg-dark-900 text-white">
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                </select>
+                <button onclick="submitCode()" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Submit</button>
+            </div>
+            <div id="submissionResult" class="mt-6 p-4 bg-dark-900 rounded-lg hidden border border-dark-700">
+                <h4 class="font-bold mb-2 text-white">Submission Result:</h4>
+                <pre id="resultText" class="text-sm whitespace-pre-wrap text-gray-300"></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. ADMIN VIEW -->
+    <section id="view-admin" class="view hidden mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
+            <h2 class="text-2xl font-bold mb-6 text-white">Create Problem</h2>
+            <form onsubmit="event.preventDefault(); createProblem();">
+                <input type="text" id="probTitle" placeholder="Title" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <textarea id="probDesc" placeholder="Description" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                <select id="probDiff" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white">
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+                <textarea id="probConst" placeholder="Constraints" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <textarea id="probIn" placeholder="Sample Input" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <textarea id="probOut" placeholder="Sample Output" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Create Problem</button>
+            </form>
+        </div>
+
+        <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
+            <h2 class="text-2xl font-bold mb-6 text-white">Create Test Case</h2>
+            <form onsubmit="event.preventDefault(); createTestCase();">
+                <input type="number" id="tcProbId" placeholder="Problem ID" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <textarea id="tcInput" placeholder="Input" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+                <textarea id="tcOutput" placeholder="Expected Output" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+                <label class="flex items-center space-x-3 mb-6 cursor-pointer">
+                    <input type="checkbox" id="tcHidden" class="w-5 h-5 text-green-600 rounded focus:ring-green-500 bg-dark-900 border-dark-600">
+                    <span class="text-gray-300 font-medium">Hidden Test Case</span>
+                </label>
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition">Create Test Case</button>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+<!-- JavaScript Logic -->
+<script>
+    // ==========================================
+    // PHASE 2: ROUTE PROTECTION & AUTH LOGIC
+    // ==========================================
+
+    function checkAuthAndRoute() {
+        const hash = window.location.hash.substring(1) || 'home';
+        const username = localStorage.getItem('username');
+        const role = localStorage.getItem('role');
+
+        const protectedRoutes = ['problems', 'admin'];
+        const adminRoutes = ['admin'];
+
+        // 1. Block unauthenticated users from protected routes
+        if (protectedRoutes.includes(hash) && !username) {
+            alert('Please login to access this page.');
+            window.location.hash = 'login';
+            return;
+        }
+
+        // 2. Block non-admins from admin routes
+        if (adminRoutes.includes(hash) && role !== 'ADMIN') {
+            alert('Access Denied: Admins only!');
+            window.location.hash = 'problems';
+            return;
+        }
+
+        // 3. If all checks pass, show the view
+        showView(hash);
+        updateNavbar();
+    }
+
+    function showView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+        const target = document.getElementById('view-' + viewId);
+        if (target) {
+            target.classList.remove('hidden');
+        } else {
+            document.getElementById('view-home').classList.remove('hidden');
+        }
+        closeAuthDropdown();
+    }
+
+    function updateNavbar() {
+        const username = localStorage.getItem('username');
+        const role = localStorage.getItem('role');
+
+        const authLinks = document.getElementById('authLinks');
+        const userLinks = document.getElementById('userLinks');
+        const welcomeMsg = document.getElementById('welcomeMsg');
+        const dynamicNavLinks = document.getElementById('dynamicNavLinks');
+
+        // Clear existing dynamic links
+        dynamicNavLinks.innerHTML = '';
+
+        if (username) {
+            authLinks.classList.add('hidden');
+            userLinks.classList.remove('hidden');
+            userLinks.classList.add('flex');
+            welcomeMsg.textContent = `Welcome, ${username}`;
+
+            // Add Problems link for all logged-in users
+            dynamicNavLinks.innerHTML += `<a href="#problems" class="hover:text-blue-300 transition font-medium">Problems</a>`;
+
+            // Add Admin Panel link ONLY for admins
+            if (role === 'ADMIN') {
+                dynamicNavLinks.innerHTML += `<a href="#admin" class="hover:text-yellow-300 transition font-medium text-yellow-400">Admin Panel</a>`;
+            }
+        } else {
+            authLinks.classList.remove('hidden');
+            userLinks.classList.add('hidden');
+            userLinks.classList.remove('flex');
+        }
+    }
+
+    function handleStartSolving() {
+        const username = localStorage.getItem('username');
+        if (username) {
+            window.location.hash = 'problems';
+        } else {
+            window.location.hash = 'login';
+        }
+    }
+
+    // Dropdown logic
+    function toggleAuthDropdown() {
+        document.getElementById('authDropdown').classList.toggle('hidden');
+    }
+    function closeAuthDropdown() {
+        document.getElementById('authDropdown').classList.add('hidden');
+    }
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('authDropdown');
+        const button = event.target.closest('button');
+        if (!button || !button.onclick || !button.onclick.toString().includes('toggleAuthDropdown')) {
+            closeAuthDropdown();
+        }
+    });
+
+    // Event Listeners
+    window.addEventListener('load', checkAuthAndRoute);
+    window.addEventListener('hashchange', checkAuthAndRoute);
+
+    function logout() {
+        localStorage.clear();
+        window.location.hash = 'home';
+        updateNavbar();
+        alert('Logged out successfully.');
+    }
+
+    // ==========================================
+    // PHASE 1: AUTHENTICATION FUNCTIONS
+    // ==========================================
+
+    async function loginUser() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch('http://localhost:8080/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('role', data.role);
+
+                alert('Login successful! Welcome ' + data.username);
+                window.location.hash = 'problems'; // Triggers hashchange -> checkAuthAndRoute
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error connecting to the server.');
+        }
+    }
+
+    async function registerUser() {
+        const username = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+
+        try {
+            const response = await fetch('http://localhost:8080/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Registration successful! Please login.');
+                window.location.hash = 'login';
+            } else {
+                alert('Registration failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error connecting to the server.');
+        }
+    }
+
+    // Placeholders
+    function createProblem() { alert('Phase 3!'); }
+    function createTestCase() { alert('Phase 3!'); }
+    function submitCode() { alert('Phase 6!'); }
+
+</script>
+</body>
+</html>
