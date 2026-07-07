@@ -35,3 +35,18 @@ body {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Additional styles for verdict display */
+#verdictDisplay .grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* History table row hover */
+#historyTableBody tr:hover {
+    background-color: var(--dark-700);
+}
+
+/* Admin table actions */
+#adminProblemsTableBody button {
+    min-width: 50px;
+}
