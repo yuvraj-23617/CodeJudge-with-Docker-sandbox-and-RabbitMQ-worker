@@ -138,11 +138,6 @@ public class JudgeService {
 
             int exitCode = process.exitValue();
 
-            if (exitCode != 0) {
-                Files.deleteIfExists(tempFile);
-                return "RUNTIME_ERROR";
-            }
-
             BufferedReader reader =
                     new BufferedReader(
                             new InputStreamReader(process.getInputStream()));
@@ -153,6 +148,16 @@ public class JudgeService {
 
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
+            }
+
+            if (exitCode != 0) {
+
+                System.out.println("===== PYTHON ERROR =====");
+                System.out.println(output.toString());
+                System.out.println("========================");
+
+                Files.deleteIfExists(tempFile);
+                return "RUNTIME_ERROR";
             }
 
             String actualOutput = output.toString().trim();
@@ -170,6 +175,7 @@ public class JudgeService {
             return "WRONG_ANSWER";
 
         } catch (Exception e) {
+            e.printStackTrace();
             return "RUNTIME_ERROR";
         }
     }
@@ -191,7 +197,6 @@ public class JudgeService {
                     new ProcessBuilder(
                             "docker",
                             "run",
-                            "-i",
                             "--rm",
                             "--network=none",
                             "--memory=128m",
@@ -201,12 +206,13 @@ public class JudgeService {
                             "eclipse-temurin:21",
                             "sh",
                             "-c",
-                            "javac /code/Main.java && java -cp /code Main"
+                            "cd /code && javac Main.java && java Main"
                     );
 
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
+            System.out.println("JAVA Docker started");
 
             BufferedWriter writer =
                     new BufferedWriter(
@@ -219,6 +225,7 @@ public class JudgeService {
 
             boolean finished =
                     process.waitFor(5, TimeUnit.SECONDS);
+            System.out.println("Finished = " + finished);
 
             if (!finished) {
                 process.destroyForcibly();
@@ -240,6 +247,11 @@ public class JudgeService {
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }
+
+            System.out.println("Exit Code = " + exitCode);
+            System.out.println("Docker Output:");
+            System.out.println(output.toString());
+            System.out.println("JAVA Finished = " + finished);
 
             String actualOutput =
                     output.toString().trim();
@@ -280,22 +292,22 @@ public class JudgeService {
                     new ProcessBuilder(
                             "docker",
                             "run",
-                            "-i",
                             "--rm",
                             "--network=none",
                             "--memory=128m",
                             "--cpus=0.5",
                             "-v",
                             tempDir.toAbsolutePath() + ":/code",
-                            "gcc:latest",
+                            "gcc:13",
                             "sh",
                             "-c",
-                            "g++ /code/main.cpp -o /code/main && /code/main"
+                            "cd /code && g++ main.cpp -o main && ./main"
                     );
 
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
+            System.out.println("JAVA Docker started");
 
             BufferedWriter writer =
                     new BufferedWriter(
@@ -308,6 +320,7 @@ public class JudgeService {
 
             boolean finished =
                     process.waitFor(5, TimeUnit.SECONDS);
+            System.out.println("CPP Finished = " + finished);
 
             if (!finished) {
                 process.destroyForcibly();
@@ -329,6 +342,10 @@ public class JudgeService {
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }
+
+            System.out.println("CPP Exit Code = " + exitCode);
+            System.out.println("CPP Docker Output:");
+            System.out.println(output.toString());
 
             String actualOutput =
                     output.toString().trim();

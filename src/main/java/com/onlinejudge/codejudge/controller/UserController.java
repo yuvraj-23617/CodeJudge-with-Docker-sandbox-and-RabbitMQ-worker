@@ -9,9 +9,11 @@ import com.onlinejudge.codejudge.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin; // Add this import
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,7 +26,6 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Register user
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -44,13 +45,11 @@ public class UserController {
         return ResponseEntity.ok(new LoginResponse(true, "User registered successfully"));
     }
 
-    // Get all users (You can restrict this to ADMIN only later)
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Login user
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
@@ -63,7 +62,6 @@ public class UserController {
             return ResponseEntity.status(401).body(new LoginResponse(false, "Invalid password"));
         }
 
-        // Return success with user details
         LoginResponse response = new LoginResponse(
                 true,
                 "Login successful",

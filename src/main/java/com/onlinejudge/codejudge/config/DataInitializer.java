@@ -14,7 +14,6 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            // Check if admin already exists to avoid duplicates on restart
             if (!userRepository.existsByUsername("admin")) {
                 User admin = new User();
                 admin.setUsername("admin");

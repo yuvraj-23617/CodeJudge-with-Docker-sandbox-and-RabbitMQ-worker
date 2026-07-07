@@ -8,11 +8,12 @@ import com.onlinejudge.codejudge.repository.SubmissionRepository;
 import com.onlinejudge.codejudge.service.JudgeService;
 import com.onlinejudge.codejudge.entity.TestCase;
 import com.onlinejudge.codejudge.service.SubmissionProducer;
+import org.springframework.web.bind.annotation.CrossOrigin; // Add this import
 
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class SubmissionController {
 
@@ -36,6 +37,12 @@ public class SubmissionController {
     @PostMapping("/run-python")
     public String runPython(@RequestBody String code) {
         return judgeService.executePython(code);
+    }
+
+    // Add this inside your SubmissionController class
+    @GetMapping("/submissions/{id}")
+    public Submission getSubmissionStatus(@PathVariable Long id) {
+        return submissionRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/submit")
