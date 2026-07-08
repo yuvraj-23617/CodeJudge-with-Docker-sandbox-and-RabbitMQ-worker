@@ -11,7 +11,17 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155', 600: '#475569' }
+                        slate: {
+                            900: '#0B0E14',
+                            800: '#12151C',
+                            700: '#171B24',
+                            600: '#242938',
+                            500: '#3A4050',
+                            400: '#8891A3',
+                            300: '#B8C0CC',
+                            200: '#D8DCE6',
+                            100: '#E8EAF0',
+                        }
                     },
                     fontFamily: {
                         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
@@ -27,37 +37,46 @@
     </script>
     <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-dark-900 text-gray-100 font-sans flex flex-col min-h-screen">
+<body class="bg-[#0B0E14] text-[#E8EAF0] font-sans flex flex-col min-h-screen">
 
 <!-- NAVBAR -->
-<nav class="bg-dark-800 border-b border-dark-700 p-4 shadow-lg sticky top-0 z-50">
+<nav class="bg-[#12151C] border-b border-[#242938] px-4 py-3 shadow-lg sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center flex-wrap gap-3">
-        <a href="#home" class="flex items-center space-x-2 text-2xl font-extrabold text-blue-400 hover:text-blue-300 transition">
+        <a href="#home" class="flex items-center space-x-2 text-2xl font-extrabold text-[#3FB950] hover:text-[#359943] transition font-mono">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l-3 3 3 3m8-6l3 3-3 3M13 5l-2 14"></path></svg>
-            <span>Code<span class="text-white">Judge</span></span>
+            <span>Code<span class="text-[#E8EAF0]">Judge</span></span>
         </a>
 
         <div class="flex items-center space-x-4 flex-wrap">
-            <div id="dynamicNavLinks" class="flex items-center space-x-4 mr-2"></div>
+            <div id="dynamicNavLinks" class="flex items-center space-x-4 mr-2 text-sm font-mono"></div>
 
             <div id="authLinks" class="relative">
-                <button onclick="toggleAuthDropdown()" class="bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold flex items-center space-x-2 text-sm">
-                    <span>Account</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <button onclick="toggleAuthDropdown()" class="bg-[#171B24] border border-[#242938] px-5 py-2 rounded-md hover:border-[#3FB950] transition-colors font-mono text-sm text-[#E8EAF0] flex items-center space-x-2">
+                    <span class="text-[#3FB950]">$</span>
+                    <span>account</span>
+                    <svg class="w-3.5 h-3.5 text-[#8891A3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
-                <div id="authDropdown" class="hidden absolute right-0 mt-2 w-56 bg-dark-800 rounded-xl shadow-xl border border-dark-700 z-50">
-                    <div class="p-2">
-                        <a href="#login" onclick="closeAuthDropdown()" class="block px-4 py-2 text-gray-300 hover:bg-dark-700 rounded-lg transition">Login</a>
-                        <a href="#register" onclick="closeAuthDropdown()" class="block px-4 py-2 text-gray-300 hover:bg-dark-700 rounded-lg transition">✨ Create Account</a>
-                        <div class="border-t border-dark-700 my-1"></div>
-                        <a href="#admin-login" onclick="closeAuthDropdown()" class="block px-4 py-2 text-amber-400 hover:bg-dark-700 rounded-lg transition text-sm font-semibold">🛡 Admin Login</a>
+                <div id="authDropdown" class="hidden absolute right-0 mt-2 w-60 z-50">
+                    <div class="term-card">
+                        <div class="py-2">
+                            <a href="#login" onclick="closeAuthDropdown()" class="flex items-center gap-2 px-4 py-2.5 font-mono text-sm text-[#E8EAF0] hover:bg-[#171B24] transition-colors">
+                                <span class="text-[#3FB950]">$</span> login
+                            </a>
+                            <a href="#register" onclick="closeAuthDropdown()" class="flex items-center gap-2 px-4 py-2.5 font-mono text-sm text-[#E8EAF0] hover:bg-[#171B24] transition-colors">
+                                <span class="text-[#3FB950]">+</span> create account
+                            </a>
+                            <div class="h-px bg-[#242938] my-1 mx-3"></div>
+                            <a href="#admin-login" onclick="closeAuthDropdown()" class="flex items-center gap-2 px-4 py-2.5 font-mono text-sm text-[#F85149] hover:bg-[#171B24] transition-colors">
+                                <span>#</span> admin login
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="userLinks" class="hidden items-center space-x-3">
-                <span id="welcomeMsg" class="text-gray-300 text-sm"></span>
-                <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm">Logout</button>
+                <span id="welcomeMsg" class="text-[#8891A3] text-sm font-mono"></span>
+                <button onclick="logout()" class="bg-[#F85149] px-4 py-2 rounded-md hover:bg-[#dc3b34] transition text-sm font-mono font-semibold text-white">logout</button>
             </div>
         </div>
     </div>
@@ -68,85 +87,136 @@
 
     <!-- HOME -->
     <section id="view-home" class="view flex-1 flex flex-col items-center justify-center text-center">
-        <div class="inline-block mb-6 px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm font-medium">⚡ Powered by a real Spring Boot judge engine</div>
-        <h1 class="text-6xl font-extrabold mb-6 text-white">Master Your Coding Interview</h1>
-        <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">Practice coding, prepare for technical interviews, and land your dream job.</p>
-        <button onclick="handleStartSolving()" class="bg-blue-600 text-white px-10 py-5 rounded-lg text-xl font-semibold shadow-lg hover:bg-blue-700 transition transform hover:scale-105">Start Solving</button>
+        <div class="inline-block mb-6 px-4 py-1 rounded-md border border-[#3FB950]/30 text-[#3FB950] text-sm font-mono font-medium bg-[#3FB950]/5">
+            <span class="text-[#3FB950]">$</span> powered by a real Spring Boot judge engine
+        </div>
+        <h1 class="text-5xl md:text-6xl font-extrabold mb-6 text-[#E8EAF0] font-sans">Master Your Coding Interview</h1>
+        <p class="text-lg md:text-xl text-[#8891A3] mb-10 max-w-2xl mx-auto font-sans">Practice coding, prepare for technical interviews, and land your dream job.</p>
+        <button onclick="handleStartSolving()" class="bg-[#3FB950] text-[#0B0E14] px-10 py-5 rounded-md text-xl font-bold font-mono shadow-lg hover:bg-[#359943] transition transform hover:scale-105">
+            $ start solving
+        </button>
+        <div class="mt-12 text-[#8891A3] text-xs font-mono border-t border-[#242938] pt-6 w-full max-w-lg mx-auto">
+            <span class="text-[#3FB950]">user@codejudge:~$</span> ./ready --level=expert
+            <span class="animate-pulse inline-block w-2 h-4 bg-[#3FB950] ml-1 align-middle"></span>
+        </div>
     </section>
 
     <!-- LOGIN -->
-    <section id="view-login" class="view hidden max-w-md mx-auto mt-16 bg-dark-800 p-8 rounded-xl shadow-xl border border-dark-700">
-        <h2 class="text-3xl font-bold mb-1 text-center text-white">Login</h2>
-        <p class="text-center text-gray-500 text-sm mb-6">Sign in to your CodeJudge account</p>
-        <form autocomplete="off" onsubmit="event.preventDefault(); loginUser();">
-            <div class="mb-4">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Username</label>
-                <input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="off" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    <section id="view-login" class="view hidden max-w-md w-full mx-auto my-auto py-12">
+        <div class="term-card" style="--term-accent: #3FB950;">
+            <div class="p-8">
+                <p class="term-prompt">user@codejudge:~$ login<span class="term-cursor"></span></p>
+                <h2 class="text-2xl font-bold text-[#E8EAF0] mb-6 mt-3 font-sans">Sign in</h2>
+
+                <form autocomplete="off" onsubmit="event.preventDefault(); loginUser();">
+                    <div class="mb-4">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">username</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix">$</span>
+                            <input type="text" id="loginUsername" placeholder="yourname" autocomplete="off" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">password</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix">$</span>
+                            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-[#3FB950] hover:bg-[#359943] text-[#0B0E14] p-3 rounded-md font-mono font-bold text-sm transition-colors">login →</button>
+                </form>
+
+                <p class="mt-6 text-center text-[#8891A3] text-sm font-sans">no account? <a href="#register" class="text-[#3FB950] font-semibold hover:underline">register</a></p>
+                <p class="mt-2 text-center text-[#8891A3] text-xs font-mono"><a href="#home" class="hover:text-[#E8EAF0] transition-colors">← back to home</a></p>
             </div>
-            <div class="mb-6">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Password</label>
-                <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="new-password" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Login</button>
-        </form>
-        <p class="mt-6 text-center text-gray-400">Don't have an account? <a href="#register" class="text-blue-400 font-semibold hover:underline">Register</a></p>
-        <p class="mt-2 text-center text-gray-500 text-sm"><a href="#home" class="hover:text-gray-300">← Back to Home</a></p>
+        </div>
     </section>
 
     <!-- REGISTER -->
-    <section id="view-register" class="view hidden max-w-md mx-auto mt-16 bg-dark-800 p-8 rounded-xl shadow-xl border border-dark-700">
-        <h2 class="text-3xl font-bold mb-6 text-center text-white">Create Account</h2>
-        <form autocomplete="off" onsubmit="event.preventDefault(); registerUser();">
-            <div class="mb-4">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Username</label>
-                <input type="text" id="regUsername" placeholder="Choose a username" autocomplete="off" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
+    <section id="view-register" class="view hidden max-w-md w-full mx-auto my-auto py-12">
+        <div class="term-card" style="--term-accent: #3FB950;">
+            <div class="p-8">
+                <p class="term-prompt">user@codejudge:~$ useradd --new<span class="term-cursor"></span></p>
+                <h2 class="text-2xl font-bold text-[#E8EAF0] mb-6 mt-3 font-sans">Create account</h2>
+
+                <form autocomplete="off" onsubmit="event.preventDefault(); registerUser();">
+                    <div class="mb-4">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">username</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix">+</span>
+                            <input type="text" id="regUsername" placeholder="yourname" autocomplete="off" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">email</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix">+</span>
+                            <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="off" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">password</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix">+</span>
+                            <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-[#3FB950] hover:bg-[#359943] text-[#0B0E14] p-3 rounded-md font-mono font-bold text-sm transition-colors">create account →</button>
+                </form>
+
+                <p class="mt-6 text-center text-[#8891A3] text-sm font-sans">already have one? <a href="#login" class="text-[#3FB950] font-semibold hover:underline">login</a></p>
+                <p class="mt-2 text-center text-[#8891A3] text-xs font-mono"><a href="#home" class="hover:text-[#E8EAF0] transition-colors">← back to home</a></p>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Email</label>
-                <input type="email" id="regEmail" placeholder="Enter your email" autocomplete="off" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
-            </div>
-            <div class="mb-6">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Password</label>
-                <input type="password" id="regPassword" placeholder="Create a password" autocomplete="new-password" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required>
-            </div>
-            <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition">Register</button>
-        </form>
-        <p class="mt-6 text-center text-gray-400">Already have an account? <a href="#login" class="text-blue-400 font-semibold hover:underline">Login</a></p>
-        <p class="mt-2 text-center text-gray-500 text-sm"><a href="#home" class="hover:text-gray-300">← Back to Home</a></p>
+        </div>
     </section>
 
     <!-- ADMIN LOGIN -->
-    <section id="view-admin-login" class="view hidden max-w-md mx-auto mt-16 bg-dark-800 p-8 rounded-xl shadow-xl border border-amber-700/40">
-        <div class="flex items-center justify-center mb-1">
-            <svg class="w-7 h-7 text-amber-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-            <h2 class="text-3xl font-bold text-center text-white">Admin Login</h2>
+    <section id="view-admin-login" class="view hidden max-w-md w-full mx-auto my-auto py-12">
+        <div class="term-card" style="--term-accent: #F85149;">
+            <div class="p-8">
+                <p class="term-prompt" style="color: #F85149;">root@codejudge:~# login<span class="term-cursor" style="background:#F85149;"></span></p>
+                <h2 class="text-2xl font-bold text-[#E8EAF0] mb-1 mt-3 font-sans">Admin login</h2>
+                <p class="text-[#8891A3] text-sm mb-6 font-mono">restricted — elevated privileges required</p>
+
+                <form autocomplete="off" onsubmit="event.preventDefault(); loginAdmin();">
+                    <div class="mb-4">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">admin username</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix" style="color:#F85149;">#</span>
+                            <input type="text" id="adminLoginUsername" placeholder="admin" autocomplete="off" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#F85149] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-[#8891A3] text-xs font-mono uppercase tracking-wider mb-2">admin password</label>
+                        <div class="term-input-wrap">
+                            <span class="term-input-prefix" style="color:#F85149;">#</span>
+                            <input type="password" id="adminLoginPassword" placeholder="••••••••" autocomplete="new-password" class="w-full p-3 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#F85149] transition-colors text-sm font-mono" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-[#F85149] hover:bg-[#dc3b34] text-white p-3 rounded-md font-mono font-bold text-sm transition-colors">login as admin →</button>
+                </form>
+
+                <p class="mt-6 text-center text-[#8891A3] text-sm font-sans">not an admin? <a href="#login" class="text-[#3FB950] font-semibold hover:underline">user login</a></p>
+                <p class="mt-2 text-center text-[#8891A3] text-xs font-mono"><a href="#home" class="hover:text-[#E8EAF0] transition-colors">← back to home</a></p>
+            </div>
         </div>
-        <p class="text-center text-gray-500 text-sm mb-6">Restricted access — administrators only</p>
-        <form autocomplete="off" onsubmit="event.preventDefault(); loginAdmin();">
-            <div class="mb-4">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Admin Username</label>
-                <input type="text" id="adminLoginUsername" placeholder="Enter admin username" autocomplete="off" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" required>
-            </div>
-            <div class="mb-6">
-                <label class="block text-gray-300 text-sm font-bold mb-2">Admin Password</label>
-                <input type="password" id="adminLoginPassword" placeholder="Enter admin password" autocomplete="new-password" class="w-full p-3 border border-dark-600 rounded-lg bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" required>
-            </div>
-            <button type="submit" class="w-full bg-amber-600 text-white p-3 rounded-lg font-semibold hover:bg-amber-700 transition">Login as Admin</button>
-        </form>
-        <p class="mt-6 text-center text-gray-500 text-sm">Not an admin? <a href="#login" class="text-blue-400 font-semibold hover:underline">Go to user login</a></p>
-        <p class="mt-2 text-center text-gray-500 text-sm"><a href="#home" class="hover:text-gray-300">← Back to Home</a></p>
     </section>
 
     <!-- PROBLEMS LIST -->
     <section id="view-problems" class="view hidden mt-10">
-        <h2 class="text-3xl font-bold mb-6 text-white">Problems</h2>
-        <div class="bg-dark-800 rounded-xl shadow-xl overflow-hidden border border-dark-700">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold text-[#E8EAF0] font-sans">Problems</h2>
+            <span class="text-[#8891A3] text-sm font-mono border border-[#242938] px-3 py-1 rounded-md bg-[#12151C]">
+                    <span class="text-[#3FB950]">$</span> ls ./problems
+                </span>
+        </div>
+        <div class="term-card overflow-hidden">
             <table class="w-full text-left">
-                <thead class="bg-dark-700 text-gray-300 uppercase text-sm">
-                <tr><th class="p-4">Status</th><th class="p-4">Title</th><th class="p-4">Difficulty</th><th class="p-4">Action</th></tr>
+                <thead class="bg-[#12151C] text-[#8891A3] uppercase text-xs font-mono border-b border-[#242938]">
+                <tr><th class="p-4 font-normal tracking-wider">Status</th><th class="p-4 font-normal tracking-wider">Title</th><th class="p-4 font-normal tracking-wider">Difficulty</th><th class="p-4 font-normal tracking-wider">Action</th></tr>
                 </thead>
-                <tbody id="problemsTableBody" class="divide-y divide-dark-700">
-                <tr><td colspan="4" class="p-4 text-center text-gray-400">Loading problems…</td></tr>
+                <tbody id="problemsTableBody" class="divide-y divide-[#242938] font-sans">
+                <tr><td colspan="4" class="p-4 text-center text-[#8891A3] font-mono">loading…</td></tr>
                 </tbody>
             </table>
         </div>
@@ -155,47 +225,51 @@
     <!-- SOLVE VIEW -->
     <section id="view-solve" class="view hidden mt-6">
         <div class="mb-6">
-            <a href="#problems" class="text-blue-400 hover:text-blue-300 transition flex items-center space-x-2">
+            <a href="#problems" class="text-[#3FB950] hover:text-[#359943] transition flex items-center space-x-2 font-mono text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span>Back to Problems</span>
+                <span>← back to problems</span>
             </a>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Problem Description -->
-            <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
-                <h2 class="text-3xl font-bold mb-4 text-white" id="solveTitle">Problem Title</h2>
+            <div class="term-card p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-[#3FB950] font-mono text-sm">$</span>
+                    <span class="text-[#8891A3] font-mono text-sm">cat ./problem</span>
+                </div>
+                <h2 class="text-3xl font-bold mb-4 text-[#E8EAF0] font-sans" id="solveTitle">Problem Title</h2>
                 <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Description</h3>
-                    <p id="solveDesc" class="text-gray-300 whitespace-pre-wrap"></p>
+                    <h3 class="text-sm font-mono font-semibold mb-2 text-[#3FB950] uppercase tracking-wider">Description</h3>
+                    <p id="solveDesc" class="text-[#B8C0CC] whitespace-pre-wrap font-sans text-sm leading-relaxed"></p>
                 </div>
                 <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Constraints</h3>
-                    <p id="solveConstraints" class="text-gray-300 whitespace-pre-wrap font-mono text-sm"></p>
+                    <h3 class="text-sm font-mono font-semibold mb-2 text-[#3FB950] uppercase tracking-wider">Constraints</h3>
+                    <p id="solveConstraints" class="text-[#B8C0CC] whitespace-pre-wrap font-mono text-sm"></p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <h3 class="text-xl font-semibold mb-2 text-blue-400">Sample Input</h3>
-                        <pre id="solveSampleInput" class="bg-dark-900 p-3 rounded-lg text-green-400 font-mono text-sm overflow-x-auto border border-dark-700"></pre>
+                        <h3 class="text-sm font-mono font-semibold mb-2 text-[#3FB950] uppercase tracking-wider">Sample Input</h3>
+                        <pre id="solveSampleInput" class="bg-[#0B0E14] p-3 rounded-md text-[#3FB950] font-mono text-sm overflow-x-auto border border-[#242938]"></pre>
                     </div>
                     <div>
-                        <h3 class="text-xl font-semibold mb-2 text-blue-400">Sample Output</h3>
-                        <pre id="solveSampleOutput" class="bg-dark-900 p-3 rounded-lg text-green-400 font-mono text-sm overflow-x-auto border border-dark-700"></pre>
+                        <h3 class="text-sm font-mono font-semibold mb-2 text-[#3FB950] uppercase tracking-wider">Sample Output</h3>
+                        <pre id="solveSampleOutput" class="bg-[#0B0E14] p-3 rounded-md text-[#3FB950] font-mono text-sm overflow-x-auto border border-[#242938]"></pre>
                     </div>
                 </div>
             </div>
 
             <!-- Code Editor -->
-            <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700 flex flex-col">
+            <div class="term-card p-6 flex flex-col">
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-                    <h3 class="text-xl font-semibold text-white flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16M6 8l-4 4 4 4M18 8l4 4-4 4"></path></svg>
-                        <span>Code Editor</span>
+                    <h3 class="text-sm font-mono font-semibold text-[#3FB950] uppercase tracking-wider flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16M6 8l-4 4 4 4M18 8l4 4-4 4"></path></svg>
+                        <span>editor</span>
                     </h3>
                     <div class="flex items-center space-x-2">
-                        <button onclick="resetCode()" title="Reset code" class="p-2 rounded-lg border border-dark-600 text-gray-400 hover:text-white hover:bg-dark-700 transition">
+                        <button onclick="resetCode()" title="Reset code" class="p-2 rounded-md border border-[#242938] text-[#8891A3] hover:text-[#E8EAF0] hover:bg-[#171B24] transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         </button>
-                        <select id="solveLanguageSelect" onchange="changeEditorLanguage(this.value)" class="p-2 border border-dark-600 rounded-lg bg-dark-900 text-white text-sm font-mono">
+                        <select id="solveLanguageSelect" onchange="changeEditorLanguage(this.value)" class="p-2 border border-[#242938] rounded-md bg-[#0B0E14] text-[#E8EAF0] text-sm font-mono focus:outline-none focus:border-[#3FB950]">
                             <option value="python">Python</option>
                             <option value="java">Java</option>
                             <option value="cpp">C++</option>
@@ -203,26 +277,26 @@
                     </div>
                 </div>
                 <!-- Editor titlebar -->
-                <div class="flex items-center px-3 py-2 bg-dark-900 border border-dark-600 border-b-0 rounded-t-lg">
-                    <span class="w-3 h-3 rounded-full bg-red-500/70 mr-1.5"></span>
-                    <span class="w-3 h-3 rounded-full bg-yellow-500/70 mr-1.5"></span>
-                    <span class="w-3 h-3 rounded-full bg-green-500/70 mr-3"></span>
-                    <span id="editorFileLabel" class="text-xs text-gray-500 font-mono">solution.py</span>
+                <div class="flex items-center px-3 py-2 bg-[#0B0E14] border border-[#242938] border-b-0 rounded-t-md">
+                    <span class="w-3 h-3 rounded-full bg-[#F85149]/70 mr-1.5"></span>
+                    <span class="w-3 h-3 rounded-full bg-[#F85149]/40 mr-1.5"></span>
+                    <span class="w-3 h-3 rounded-full bg-[#3FB950]/50 mr-3"></span>
+                    <span id="editorFileLabel" class="text-xs text-[#8891A3] font-mono">solution.py</span>
                 </div>
-                <div id="monacoEditorContainer" class="w-full h-96 rounded-b-lg rounded-t-none"></div>
-                <button id="submitCodeBtn" onclick="submitCode()" class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition w-full disabled:opacity-50 disabled:cursor-not-allowed">Submit Code</button>
+                <div id="monacoEditorContainer" class="w-full h-96 rounded-b-md rounded-t-none"></div>
+                <button id="submitCodeBtn" onclick="submitCode()" class="mt-4 bg-[#3FB950] text-[#0B0E14] px-6 py-3 rounded-md font-mono font-bold hover:bg-[#359943] transition w-full disabled:opacity-50 disabled:cursor-not-allowed">
+                    $ submit
+                </button>
 
                 <!-- Submission Result -->
-                <div id="solveSubmissionResult" class="mt-4 p-4 bg-dark-900 rounded-lg hidden border border-dark-700">
-                    <div id="verdictLoading" class="hidden items-center space-x-3 text-gray-300 py-2">
-                        <svg class="animate-spin h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24">
+                <div id="solveSubmissionResult" class="mt-4 p-4 bg-[#0B0E14] rounded-md hidden border border-[#242938]">
+                    <div id="verdictLoading" class="hidden items-center space-x-3 text-[#8891A3] py-2 font-mono">
+                        <svg class="animate-spin h-5 w-5 text-[#3FB950]" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                         </svg>
-                        <span>Judging your submission…</span>
+                        <span>judging…</span>
                     </div>
-
-                    <!-- Verdict display – populated dynamically -->
                     <div id="verdictDisplay" class="hidden"></div>
                 </div>
             </div>
@@ -231,97 +305,128 @@
 
     <!-- HISTORY VIEW -->
     <section id="view-history" class="view hidden mt-10">
-        <h2 class="text-3xl font-bold mb-6 text-white">Submission History</h2>
-        <div class="bg-dark-800 rounded-xl shadow-xl overflow-hidden border border-dark-700">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold text-[#E8EAF0] font-sans">Submission History</h2>
+            <span class="text-[#8891A3] text-sm font-mono border border-[#242938] px-3 py-1 rounded-md bg-[#12151C]">
+                    <span class="text-[#3FB950]">$</span> cat ~/.history
+                </span>
+        </div>
+        <div class="term-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-dark-700 text-gray-300 uppercase text-sm">
+                    <thead class="bg-[#12151C] text-[#8891A3] uppercase text-xs font-mono border-b border-[#242938]">
                     <tr>
-                        <th class="p-4">Problem</th>
-                        <th class="p-4">Language</th>
-                        <th class="p-4">Verdict</th>
-                        <th class="p-4">Runtime</th>
-                        <th class="p-4">Memory</th>
-                        <th class="p-4">Submitted</th>
+                        <th class="p-4 font-normal tracking-wider">Problem</th>
+                        <th class="p-4 font-normal tracking-wider">Language</th>
+                        <th class="p-4 font-normal tracking-wider">Verdict</th>
+                        <th class="p-4 font-normal tracking-wider">Runtime</th>
+                        <th class="p-4 font-normal tracking-wider">Memory</th>
+                        <th class="p-4 font-normal tracking-wider">Submitted</th>
                     </tr>
                     </thead>
-                    <tbody id="historyTableBody" class="divide-y divide-dark-700">
-                    <tr><td colspan="6" class="p-4 text-center text-gray-400">No submissions yet.</td></tr>
+                    <tbody id="historyTableBody" class="divide-y divide-[#242938] font-sans">
+                    <tr><td colspan="6" class="p-4 text-center text-[#8891A3] font-mono">no submissions yet</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="mt-4 text-right">
-            <button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm font-medium transition">Clear History</button>
+            <button onclick="clearHistory()" class="text-[#F85149] hover:text-[#dc3b34] text-sm font-mono font-medium transition">clear history</button>
         </div>
     </section>
 
     <!-- ADMIN VIEW -->
     <section id="view-admin" class="view hidden mt-10">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold text-[#E8EAF0] font-sans">Admin Panel</h2>
+            <span class="text-[#F85149] text-sm font-mono border border-[#242938] px-3 py-1 rounded-md bg-[#12151C]">
+                    <span style="color:#F85149;">#</span> /root/control
+                </span>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Create / Edit Problem -->
-            <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
-                <h2 class="text-2xl font-bold mb-6 text-white" id="adminFormTitle">Create Problem</h2>
+            <div class="term-card p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-[#3FB950] font-mono text-sm">$</span>
+                    <span class="text-[#8891A3] font-mono text-sm" id="adminFormTitle">vim ./new-problem</span>
+                </div>
                 <form id="adminProblemForm" onsubmit="event.preventDefault(); handleProblemSubmit();">
-                    <input type="text" id="probTitle" placeholder="Title" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                    <textarea id="probDesc" placeholder="Description" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
-                    <select id="probDiff" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white">
+                    <input type="text" id="probTitle" placeholder="title" class="w-full p-3 border border-[#242938] rounded-md mb-4 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required />
+                    <textarea id="probDesc" placeholder="description" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-24 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required></textarea>
+                    <select id="probDiff" class="w-full p-3 border border-[#242938] rounded-md mb-4 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono">
                         <option value="Easy">Easy</option>
                         <option value="Medium">Medium</option>
                         <option value="Hard">Hard</option>
                     </select>
-                    <textarea id="probConst" placeholder="Constraints" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <textarea id="probIn" placeholder="Sample Input" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <textarea id="probOut" placeholder="Sample Output" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-20 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <button id="adminSubmitBtn" type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Create Problem</button>
-                    <button id="adminCancelBtn" type="button" onclick="cancelEditProblem()" class="hidden w-full mt-2 bg-gray-600 text-white p-3 rounded-lg font-semibold hover:bg-gray-700 transition">Cancel Edit</button>
+                    <textarea id="probConst" placeholder="constraints" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-20 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono"></textarea>
+                    <textarea id="probIn" placeholder="sample input" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-20 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono"></textarea>
+                    <textarea id="probOut" placeholder="sample output" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-20 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono"></textarea>
+                    <button id="adminSubmitBtn" type="submit" class="w-full bg-[#3FB950] text-[#0B0E14] p-3 rounded-md font-mono font-bold hover:bg-[#359943] transition">create problem →</button>
+                    <button id="adminCancelBtn" type="button" onclick="cancelEditProblem()" class="hidden w-full mt-2 bg-[#242938] text-[#8891A3] p-3 rounded-md font-mono font-semibold hover:bg-[#3A4050] transition">cancel edit</button>
                 </form>
             </div>
 
             <!-- Create Test Case -->
-            <div class="bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
-                <h2 class="text-2xl font-bold mb-6 text-white">Create Test Case</h2>
+            <div class="term-card p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-[#3FB950] font-mono text-sm">$</span>
+                    <span class="text-[#8891A3] font-mono text-sm">./add-testcase</span>
+                </div>
                 <form onsubmit="event.preventDefault(); createTestCase();">
-                    <input type="number" id="tcProbId" placeholder="Problem ID" class="w-full p-3 border border-dark-600 rounded-lg mb-4 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required />
-                    <textarea id="tcInput" placeholder="Input" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
-                    <textarea id="tcOutput" placeholder="Expected Output" class="w-full p-3 border border-dark-600 rounded-lg mb-4 h-24 bg-dark-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+                    <input type="number" id="tcProbId" placeholder="problem ID" class="w-full p-3 border border-[#242938] rounded-md mb-4 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required />
+                    <textarea id="tcInput" placeholder="input" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-24 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required></textarea>
+                    <textarea id="tcOutput" placeholder="expected output" class="w-full p-3 border border-[#242938] rounded-md mb-4 h-24 bg-[#0B0E14] text-[#E8EAF0] focus:outline-none focus:border-[#3FB950] transition-colors text-sm font-mono" required></textarea>
                     <label class="flex items-center space-x-3 mb-6 cursor-pointer">
-                        <input type="checkbox" id="tcHidden" class="w-5 h-5 text-green-600 rounded focus:ring-green-500 bg-dark-900 border-dark-600" />
-                        <span class="text-gray-300 font-medium">Hidden Test Case</span>
+                        <input type="checkbox" id="tcHidden" class="w-5 h-5 rounded border-[#242938] bg-[#0B0E14] text-[#3FB950] focus:ring-[#3FB950] focus:ring-1" />
+                        <span class="text-[#8891A3] font-mono text-sm">hidden test case</span>
                     </label>
-                    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition">Create Test Case</button>
+                    <button type="submit" class="w-full bg-[#3FB950] text-[#0B0E14] p-3 rounded-md font-mono font-bold hover:bg-[#359943] transition">add test case →</button>
                 </form>
             </div>
         </div>
 
         <!-- Manage Problems -->
-        <div class="mt-8 bg-dark-800 p-6 rounded-xl shadow-xl border border-dark-700">
-            <h2 class="text-2xl font-bold mb-4 text-white">📋 Manage Problems</h2>
+        <div class="mt-8 term-card p-6">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-[#3FB950] font-mono text-sm">$</span>
+                <span class="text-[#8891A3] font-mono text-sm">ls -la ./problems</span>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-dark-700 text-gray-300 uppercase text-sm">
+                    <thead class="bg-[#12151C] text-[#8891A3] uppercase text-xs font-mono border-b border-[#242938]">
                     <tr>
-                        <th class="p-3">ID</th>
-                        <th class="p-3">Title</th>
-                        <th class="p-3">Difficulty</th>
-                        <th class="p-3 text-center">Actions</th>
+                        <th class="p-3 font-normal tracking-wider">ID</th>
+                        <th class="p-3 font-normal tracking-wider">Title</th>
+                        <th class="p-3 font-normal tracking-wider">Difficulty</th>
+                        <th class="p-3 font-normal tracking-wider text-center">Actions</th>
                     </tr>
                     </thead>
-                    <tbody id="adminProblemsTableBody" class="divide-y divide-dark-700">
-                    <tr><td colspan="4" class="p-4 text-center text-gray-400">Loading problems…</td></tr>
+                    <tbody id="adminProblemsTableBody" class="divide-y divide-[#242938] font-sans">
+                    <tr><td colspan="4" class="p-4 text-center text-[#8891A3] font-mono">loading…</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <!-- Danger Zone -->
-        <div class="mt-8 bg-red-900/20 p-6 rounded-xl shadow-xl border border-red-800">
-            <h2 class="text-2xl font-bold mb-4 text-red-400">⚠️ Danger Zone</h2>
-            <p class="text-gray-400 mb-4 text-sm">These actions are irreversible. Use only when you need to clean up duplicate test data.</p>
+        <div class="mt-8 term-card p-6" style="border-color: #F85149; --term-accent: #F85149;">
+            <div class="flex items-center gap-2 mb-4">
+                <span style="color:#F85149;" class="font-mono text-sm">#</span>
+                <span class="text-[#F85149] font-mono text-sm">⚠️ /danger-zone</span>
+            </div>
+            <p class="text-[#8891A3] mb-4 text-sm font-sans">These actions are irreversible. Use only when you need to clean up duplicate test data.</p>
             <div class="flex flex-wrap gap-4">
-                <button onclick="resetProblems()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition">🗑️ Delete All Problems</button>
-                <button onclick="resetSubmissions()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition">🗑️ Delete All Submissions</button>
-                <button onclick="fullReset()" class="bg-red-800 hover:bg-red-900 text-white px-6 py-3 rounded-lg font-semibold transition border border-red-600">💣 FULL DATABASE RESET</button>
+                <!-- Updated button labels for clarity -->
+                <button onclick="resetProblems()" class="bg-[#F85149] hover:bg-[#dc3b34] text-white px-6 py-3 rounded-md font-mono font-semibold transition text-sm">
+                    rm -rf problems/
+                </button>
+                <button onclick="resetSubmissions()" class="bg-[#F85149] hover:bg-[#dc3b34] text-white px-6 py-3 rounded-md font-mono font-semibold transition text-sm">
+                    rm -rf submissions/
+                </button>
+                <button onclick="fullReset()" class="bg-[#0B0E14] hover:bg-[#171B24] text-[#F85149] px-6 py-3 rounded-md font-mono font-semibold transition text-sm border border-[#F85149]">
+                    DROP DATABASE;
+                </button>
             </div>
         </div>
     </section>
@@ -329,8 +434,11 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-dark-800 border-t border-dark-700 p-4 text-center text-gray-500 text-sm mt-8">
-    &copy; 2026 CodeJudge Platform. Built with Spring Boot By <a href="https://www.linkedin.com/in/yuvraj-verma-93a763374/" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: cornflowerblue;" >Yuvraj Verma</a>
+<footer class="bg-[#12151C] border-t border-[#242938] p-4 text-center text-[#8891A3] text-sm mt-8 font-sans">
+    &copy; 2026 CodeJudge Platform. Built with Spring Boot By
+    <a href="https://www.linkedin.com/in/yuvraj-verma-93a763374/" target="_blank" rel="noopener noreferrer" class="text-[#3FB950] hover:underline font-mono">
+        Yuvraj Verma
+    </a>
 </footer>
 
 <script src="app.js"></script>

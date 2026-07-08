@@ -3,6 +3,66 @@
     --dark-800: #1e293b;
     --dark-700: #334155;
     --dark-600: #475569;
+
+    /* CodeJudge terminal tokens */
+    --cj-bg: #0b0e14;
+    --cj-surface: #12151c;
+    --cj-surface-2: #171b24;
+    --cj-border: #242938;
+    --cj-text: #e8eaf0;
+    --cj-text-dim: #8891a3;
+    --cj-accent: #3fb950;
+    --cj-accent-hover: #359943;
+    --cj-danger: #f85149;
+    --cj-danger-hover: #dc3b34;
+}
+
+.term-card {
+    background: var(--cj-surface);
+    border: 1px solid var(--cj-border);
+    border-radius: 8px;
+    box-shadow: 0 24px 48px -24px rgba(0,0,0,0.65);
+    position: relative;
+    overflow: hidden;
+}
+.term-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(var(--cj-accent));
+}
+.term-prompt {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cj-text-dim);
+    font-size: 0.8rem;
+    letter-spacing: 0.01em;
+}
+.term-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    background: var(var(--cj-accent));
+    margin-left: 3px;
+    vertical-align: text-bottom;
+    animation: term-blink 1s steps(1) infinite;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+
+.term-input-wrap { position: relative; }
+.term-input-prefix {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(var(--cj-accent));
+    font-weight: 600;
+    pointer-events: none;
+}
+.term-input-prefix + input {
+    padding-left: 2.3rem;
+    font-family: 'JetBrains Mono', monospace;
 }
 
 body {
@@ -49,4 +109,34 @@ body {
 /* Admin table actions */
 #adminProblemsTableBody button {
     min-width: 50px;
+}
+/* Auth card glow + gradient border */
+.auth-glow {
+    position: absolute;
+    inset: -40px;
+    background: radial-gradient(circle at 30% 20%, rgba(59,130,246,0.25), transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.18), transparent 55%);
+    filter: blur(10px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.auth-card-border {
+    position: relative;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.6), rgba(51,65,85,0.4) 40%, rgba(168,85,247,0.5));
+}
+
+.auth-input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-600);
+    pointer-events: none;
+}
+
+.auth-input-icon + input {
+    padding-left: 2.75rem;
 }
