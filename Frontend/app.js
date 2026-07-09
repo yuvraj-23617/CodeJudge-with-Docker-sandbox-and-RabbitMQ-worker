@@ -17,15 +17,17 @@ const starterCode = {
 
 require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
 
-// --- MONACO EDITOR SETUP ---
-function initMonaco() {
+function initMonaco(onReady) {
     const container = document.getElementById('monacoEditorContainer');
     if (!container) return;
 
     if (!window.monaco) {
         if (!monacoLoadStarted) {
             monacoLoadStarted = true;
-            require(['vs/editor/editor.main'], initMonaco);
+            require(['vs/editor/editor.main'], function () { initMonaco(onReady); });
+        } else {
+            // another load is already in flight — poll until it's ready
+            setTimeout(function () { initMonaco(onReady); }, 50);
         }
         return;
     }
@@ -70,7 +72,9 @@ function initMonaco() {
         scrollbar: { verticalScrollbarSize: 10, horizontalScrollbarSize: 10 }
     });
 
-    setTimeout(() => { if (monacoEditor) monacoEditor.layout(); }, 100);
+    setTimeout(function () { if (monacoEditor) monacoEditor.layout(); }, 100);
+
+    if (typeof onReady === 'function') onReady();
 }
 
 function registerCompletionProviders() {
@@ -134,6 +138,7 @@ function resetCode() {
     if (!monacoEditor) return;
     if (!confirm('Reset your code back to the starter template?')) return;
     const lang = document.getElementById('solveLanguageSelect').value;
+    delete codeDrafts[lang];
     monacoEditor.setValue(starterCode[lang] || '');
 }
 
@@ -147,12 +152,11 @@ function showView(viewId) {
         document.getElementById('view-solve').classList.remove('hidden');
 
         if (!monacoEditor) {
-            initMonaco();
+            initMonaco(function () { loadSolveView(problemId); });
         } else {
             monacoEditor.layout();
+            loadSolveView(problemId);
         }
-
-        loadSolveView(problemId);
     } else {
         stopPolling();
         resetEditor();
@@ -193,7 +197,10 @@ async function loadSolveView(id) {
 
         const langSelect = document.getElementById('solveLanguageSelect');
         langSelect.value = 'python';
+        langSelect.dataset.lastLang = 'python';
         document.getElementById('editorFileLabel').textContent = fileNameMap.python;
+
+        codeDrafts = {}; // reset drafts for the new problem
 
         if (monacoEditor) {
             monacoEditor.setValue(starterCode.python);
@@ -229,14 +236,32 @@ function resetEditor() {
     hideSubmissionResult();
 }
 
+let codeDrafts = {};
+
 function changeEditorLanguage(lang) {
     const fileLabel = document.getElementById('editorFileLabel');
     if (fileLabel) fileLabel.textContent = fileNameMap[lang] || 'solution.txt';
+
     if (monacoEditor && window.monaco) {
+        const langSelect = document.getElementById('solveLanguageSelect');
+        const prevLang = langSelect ? langSelect.dataset.lastLang : null;
+
+        // save whatever was in the editor for the language we're leaving
+        if (prevLang) {
+            codeDrafts[prevLang] = monacoEditor.getValue();
+        }
+
         const model = monacoEditor.getModel();
         if (model) {
             monaco.editor.setModelLanguage(model, languageMap[lang] || 'plaintext');
         }
+
+        // restore this language's draft, or fall back to its starter template
+        monacoEditor.setValue(
+            codeDrafts.hasOwnProperty(lang) ? codeDrafts[lang] : (starterCode[lang] || '')
+        );
+
+        if (langSelect) langSelect.dataset.lastLang = lang;
     }
 }
 
@@ -415,35 +440,49 @@ async function registerUser() {
         alert('Server error. Is backend running?');
     }
 }
-
-// --- PROBLEM MANAGEMENT (User & Admin) ---
+function getSolvedProblemIds() {
+    const username = localStorage.getItem('username');
+    if (!username) return new Set();
+    const historyKey = 'codejudge_history_' + username;
+    const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+    const solved = new Set();
+    for (const entry of history) {
+        if (entry.verdict === 'ACCEPTED') {
+            solved.add(String(entry.problemId));
+        }
+    }
+    return solved;
+}
 async function loadProblems() {
     const tbody = document.getElementById('problemsTableBody');
-    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400"><div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-blue-400 border-t-transparent"></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400"><div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-blue-400 border-t-transparent"></div></td></tr>';
     try {
         const res = await fetch(API_BASE_URL + '/problems');
         const problems = await res.json();
         if (problems.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">No problems yet.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">No problems yet.</td></tr>';
             return;
         }
+        const solvedIds = getSolvedProblemIds();
         let html = '';
         for (const p of problems) {
             const colorClass = p.difficulty === 'Easy' ? 'bg-green-900 text-green-300' :
                 (p.difficulty === 'Medium' ? 'bg-yellow-900 text-yellow-300' : 'bg-red-900 text-red-300');
+            const isSolved = solvedIds.has(String(p.id));
+            const actionCell = isSolved
+                ? `<span class="inline-flex items-center gap-1.5 text-[var(--cj-accent)] font-mono text-sm font-semibold">✓ solved</span>`
+                : `<span class="text-blue-400 font-semibold text-sm">Solve</span>`;
             html += `<tr class="hover:bg-dark-700 transition cursor-pointer" onclick="window.location.hash='solve/${p.id}'">`;
-            html += `<td class="p-4 text-gray-400">—</td>`;
             html += `<td class="p-4 font-medium text-white">${p.title}</td>`;
             html += `<td class="p-4"><span class="px-3 py-1 rounded-full text-xs font-semibold ${colorClass}">${p.difficulty}</span></td>`;
-            html += `<td class="p-4"><button class="text-blue-400 hover:text-blue-300 text-sm font-semibold">Solve</button></td>`;
+            html += `<td class="p-4">${actionCell}</td>`;
             html += `</tr>`;
         }
         tbody.innerHTML = html;
     } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-400">Failed to load problems.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-400">Failed to load problems.</td></tr>';
     }
 }
-
 // --- ADMIN: Manage Problems (Load, Edit, Delete) ---
 async function loadAdminProblems() {
     const tbody = document.getElementById('adminProblemsTableBody');
