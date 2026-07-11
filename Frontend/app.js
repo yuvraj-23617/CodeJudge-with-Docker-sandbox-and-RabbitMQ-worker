@@ -798,7 +798,7 @@ function displayVerdict(submission) {
     let icon, color, label;
     switch (verdict) {
         case 'ACCEPTED':
-            icon = '✅';
+            icon = '';
             color = 'text-green-400';
             label = 'Accepted';
             break;

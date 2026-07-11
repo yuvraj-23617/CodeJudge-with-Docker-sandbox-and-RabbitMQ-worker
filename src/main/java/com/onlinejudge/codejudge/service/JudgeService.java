@@ -197,10 +197,11 @@ public class JudgeService {
                     new ProcessBuilder(
                             "docker",
                             "run",
+                            "-i",
                             "--rm",
                             "--network=none",
-                            "--memory=256m",
-                            "--cpus=1.0",
+                            "--memory=512m",
+                            "--cpus=1.5",
                             "-v",
                             tempDir.toAbsolutePath() + ":/code",
                             "eclipse-temurin:21",
@@ -224,7 +225,7 @@ public class JudgeService {
             writer.close();
 
             boolean finished =
-                    process.waitFor(20, TimeUnit.SECONDS);
+                    process.waitFor(30, TimeUnit.SECONDS);
             System.out.println("Finished = " + finished);
 
             if (!finished) {
@@ -292,10 +293,11 @@ public class JudgeService {
                     new ProcessBuilder(
                             "docker",
                             "run",
+                            "-i",
                             "--rm",
                             "--network=none",
-                            "--memory=128m",
-                            "--cpus=0.5",
+                            "--memory=512m",
+                            "--cpus=1.5",
                             "-v",
                             tempDir.toAbsolutePath() + ":/code",
                             "gcc:13",
@@ -319,7 +321,7 @@ public class JudgeService {
             writer.close();
 
             boolean finished =
-                    process.waitFor(5, TimeUnit.SECONDS);
+                    process.waitFor(30, TimeUnit.SECONDS);
             System.out.println("CPP Finished = " + finished);
 
             if (!finished) {
