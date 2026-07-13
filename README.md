@@ -1,342 +1,116 @@
 # CodeJudge
 
-A distributed online coding assessment platform built with **Java Spring Boot**, designed to evaluate programming submissions asynchronously using **RabbitMQ**, **Docker**, and **PostgreSQL**. The platform supports secure user authentication, multi-language code execution, automated test case evaluation, and containerized deployment.
+A containerized online coding judge platform that supports Python, Java, and C++ with isolated execution in Docker.
+
+---
+
+## Overview
+
+CodeJudge provides a complete environment for coding problem solving and automated evaluation. It accepts submissions in multiple languages, executes them inside ephemeral Docker containers, and returns verdicts such as ACCEPTED, WRONG_ANSWER, RUNTIME_ERROR, or TIME_LIMIT_EXCEEDED. The system is designed for local use, demonstration, and educational purposes.
 
 ---
 
 ## Features
 
-### User Management
-- User Registration
-- User Login
-- BCrypt Password Encryption
-- Role-based Authentication (Admin/User)
-
-### Problem Management
-- Create Coding Problems
-- View All Problems
-- View Problem Details
-- Public & Hidden Test Cases
-
-### Code Evaluation
-- Multi-language Support
-  - Python
-  - Java
-  - C++
-- Docker-based Secure Sandbox
-- Automated Test Case Validation
-- Execution Time Measurement
-- Verdict Generation
-  - Accepted
-  - Wrong Answer
-  - Runtime Error
-  - Compilation Error
-  - Time Limit Exceeded
-  - Pending
-
-### Architecture
-- RESTful API Design
-- Asynchronous Processing using RabbitMQ
-- Producer-Consumer Judging Pipeline
-- PostgreSQL Database
-- Docker Compose Deployment
+- Multi-language support: Python, Java, C++
+- Docker-based execution with memory and CPU limits
+- Asynchronous judging via RabbitMQ
+- 12 pre-loaded problems with visible and hidden test cases
+- Admin panel for managing problems and test cases
+- Monaco Editor for code input
+- Submission history stored in the browser
+- Fully containerised with Docker Compose
+- One-click startup scripts for Windows
 
 ---
 
-# Tech Stack
+## Technology Stack
 
-| Category | Technology |
-|-----------|------------|
-| Language | Java 17 |
-| Framework | Spring Boot |
-| Security | Spring Security, BCrypt |
-| Database | PostgreSQL |
-| ORM | Spring Data JPA / Hibernate |
-| Messaging | RabbitMQ |
-| Code Execution | Docker |
-| Build Tool | Gradle |
-| API Testing | Postman |
-| Deployment | Docker Compose |
-
----
-
-# System Architecture
-
-```
-                    Client / Postman
-                           │
-                           ▼
-                 Spring Boot REST API
-                           │
-      ┌────────────────────┼────────────────────┐
-      │                    │                    │
-      ▼                    ▼                    ▼
- Authentication      Problem Service     Submission Service
-      │                    │                    │
-      └────────────────────┼────────────────────┘
-                           │
-                           ▼
-                    RabbitMQ Queue
-                           │
-                           ▼
-                     Judge Worker
-                           │
-                           ▼
-                  Docker Code Sandbox
-                           │
-            ┌──────────────┼──────────────┐
-            ▼              ▼              ▼
-         Python          Java           C++
-                           │
-                           ▼
-                   Verdict Generation
-                           │
-                           ▼
-                      PostgreSQL
-```
+| Component        | Technology                         |
+|------------------|------------------------------------|
+| Backend          | Spring Boot 4, Hibernate, Spring Security |
+| Database         | PostgreSQL 16                      |
+| Message Queue    | RabbitMQ 3                         |
+| Frontend         | HTML, CSS (Tailwind), JavaScript   |
+| Code Editor      | Monaco Editor                      |
+| Execution Engine | Docker (Docker-in-Docker pattern)  |
+| Proxy            | Nginx                              |
+| Build Tool       | Gradle                             |
+| Containerisation | Docker Compose                     |
 
 ---
 
-# Submission Workflow
+## Getting Started
 
-1. User submits source code.
-2. Submission is stored in PostgreSQL with status **PENDING**.
-3. Submission ID is published to RabbitMQ.
-4. Judge Worker consumes the message.
-5. Code executes inside an isolated Docker container.
-6. Output is compared against public and hidden test cases.
-7. Execution time is recorded.
-8. Verdict is stored in PostgreSQL.
-9. Client polls the submission endpoint until the final verdict is available.
+### Prerequisites
 
----
+- Docker Desktop (or Docker Engine + Compose) installed and running
+- Ports 8080 and 8081 must be available
 
-# Project Structure
+### Startup Instructions (Windows)
 
-```
-CodeJudge
-│
-├── src
-│   ├── config
-│   ├── controller
-│   ├── dto
-│   ├── entity
-│   ├── repository
-│   ├── security
-│   └── service
-│
-├── Dockerfile
-├── docker-compose.yml
-├── build.gradle
-└── README.md
-```
+1. Extract the project archive.
+2. Double-click `START_CODEJUDGE.bat`.
+3. Wait for the build and startup process to complete (first run may take 3–5 minutes).
+4. The application will open automatically in your default browser at `http://localhost:8081`.
 
----
-
-# API Endpoints
-
-## Authentication
-
-### Register
-
-```
-POST /users/register
-```
-
-Request
-
-```json
-{
-    "username": "john",
-    "email": "john@example.com",
-    "password": "password123"
-}
-```
-
----
-
-### Login
-
-```
-POST /users/login
-```
-
-Request
-
-```json
-{
-    "email": "john@example.com",
-    "password": "password123"
-}
-```
-
----
-
-## Problems
-
-### Get All Problems
-
-```
-GET /problems
-```
-
----
-
-### Get Problem
-
-```
-GET /problems/{id}
-```
-
----
-
-### Create Problem
-
-```
-POST /problems
-```
-
----
-
-## Submissions
-
-### Submit Code
-
-```
-POST /submit
-```
-
-Example
-
-```json
-{
-    "problemId": 1,
-    "language": "python",
-    "code": "print('Hello World')"
-}
-```
-
----
-
-### Get Submission
-
-```
-GET /submissions/{id}
-```
-
----
-
-# Supported Languages
-
-- Python
-- Java
-- C++
-
----
-
-# Running the Project
-
-## Prerequisites
-
-- Java 17
-- Docker Desktop
-- Git
-
----
-
-## Clone Repository
+### Startup Instructions (Linux / macOS)
 
 ```bash
-git clone https://github.com/<your-username>/CodeJudge.git
+docker compose up -d --build
+```
 
-cd CodeJudge
+Then open `http://localhost:8081` in your browser.
+
+### Shutdown
+
+- Windows: Double-click `STOP_CODEJUDGE.bat`
+- Linux / macOS: `docker compose down`
+
+---
+
+## Credentials
+
+- **Admin account**: `admin` / `admin123`
+- **User accounts**: Register via the login page (no email verification required)
+
+The admin account is created automatically when the application starts with an empty database.
+
+---
+
+## Project Structure
+
+```
+CodeJudge/
+├── src/                     Backend source code (Spring Boot)
+├── Frontend/                Frontend static files and Nginx configuration
+├── docker-compose.yml       Service definitions
+├── Dockerfile               Backend container build
+├── Frontend/Dockerfile      Frontend container build
+├── .env                     Environment variables (credentials)
+├── START_CODEJUDGE.bat      Windows startup script
+├── STOP_CODEJUDGE.bat       Windows shutdown script
+├── build.gradle             Gradle build configuration
+└── README.md                This file
 ```
 
 ---
 
-## Start Docker
+## Notes for Users
 
-Ensure Docker Desktop is running.
-
----
-
-## Run the Project
-
-```bash
-docker compose up --build
-```
-
-The following services will start automatically:
-
-- Spring Boot
-- PostgreSQL
-- RabbitMQ
+- The application is intended for **local demo and educational use only**.
+- It is not hardened for public internet deployment.
+- Memory usage reporting is currently a placeholder and will be improved in future versions.
+- Hidden test cases are not exposed to the frontend, but their expected outputs are currently included in the API response for simplicity. This will be addressed in a later release.
 
 ---
 
-## Access Services
+## Contributing
 
-Spring Boot
-
-```
-http://localhost:8080
-```
-
-RabbitMQ Dashboard
-
-```
-http://localhost:15672
-```
-
-Default Credentials
-
-```
-Username : guest
-Password : guest
-```
+This project is part of a mentorship handoff. Contributions, suggestions, and feedback are welcome via issues or pull requests.
 
 ---
 
-## Stop the Project
+## License
 
-```bash
-docker compose down
-```
-
----
-
-# Future Improvements
-
-- JWT Authentication
-- React Frontend
-- Monaco Code Editor
-- Live Verdict Updates using WebSockets
-- Contest Mode
-- Leaderboards
-- User Profiles
-- Submission History
-- Redis Caching
-- Multiple Judge Workers
-- Kubernetes Deployment
-- CI/CD with GitHub Actions
-
----
-
-# Highlights
-
-- Multi-language Online Judge
-- Secure Docker Sandbox Execution
-- Asynchronous RabbitMQ-based Processing
-- Role-based User Authentication
-- Containerized Deployment
-- RESTful API Architecture
-- Layered Spring Boot Design
-
----
-
-# Author
-
-**Yuvraj Verma**
-
-B.Tech Computer Science and Biosciences  
-IIIT-Delhi
+This project is provided for educational and demonstration purposes. All rights reserved by the author unless otherwise stated.
