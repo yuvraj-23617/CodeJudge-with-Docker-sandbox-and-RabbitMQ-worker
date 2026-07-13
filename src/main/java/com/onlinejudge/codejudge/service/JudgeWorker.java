@@ -14,69 +14,49 @@ public class JudgeWorker {
     private final SubmissionRepository submissionRepository;
     private final JudgeService judgeService;
 
-    public JudgeWorker(
-            SubmissionRepository submissionRepository,
-            JudgeService judgeService) {
-
+    public JudgeWorker(SubmissionRepository submissionRepository,
+                       JudgeService judgeService) {
         this.submissionRepository = submissionRepository;
         this.judgeService = judgeService;
     }
 
-    @RabbitListener(
-            queues = RabbitConfig.QUEUE
-    )
+    @RabbitListener(queues = RabbitConfig.QUEUE)
     public void consume(String submissionIdString) {
-        System.out.println("WORKER START");
         Long submissionId = Long.parseLong(submissionIdString);
+        Submission submission = submissionRepository.findById(submissionId).orElse(null);
+        if (submission == null) return;
 
-        System.out.println("Submission = " + submissionId);
-
-        Submission submission =
-                submissionRepository
-                        .findById(submissionId)
-                        .orElse(null);
-
-        if (submission == null) {
-            return;
-        }
-
-        Problem problem =
-                submission.getProblem();
-
-        System.out.println(
-                "Test cases count = "
-                        + problem.getTestCases().size()
-        );
+        Problem problem = submission.getProblem();
+        long totalExecutionTime = 0;
+        int testCaseIndex = 0;
 
         for (TestCase tc : problem.getTestCases()) {
-
             long start = System.currentTimeMillis();
 
-            String verdict =
-                    judgeService.judge(
-                            submission.getLanguage(),
-                            submission.getCode(),
-                            tc.getInput(),
-                            tc.getExpectedOutput()
-                    );
+            String verdict = judgeService.judge(
+                    submission.getLanguage(),
+                    submission.getCode(),
+                    tc.getInput(),
+                    tc.getExpectedOutput(),
+                    submissionId,
+                    testCaseIndex
+            );
 
             long end = System.currentTimeMillis();
-
-            submission.setExecutionTime(end - start);
+            totalExecutionTime += (end - start);
 
             if (!verdict.equals("ACCEPTED")) {
-
                 submission.setVerdict(verdict);
-
+                submission.setExecutionTime(totalExecutionTime);
                 submissionRepository.save(submission);
-
                 return;
             }
+
+            testCaseIndex++;
         }
 
         submission.setVerdict("ACCEPTED");
-
+        submission.setExecutionTime(totalExecutionTime);
         submissionRepository.save(submission);
-        System.out.println("SETTING ACCEPTED");
     }
 }

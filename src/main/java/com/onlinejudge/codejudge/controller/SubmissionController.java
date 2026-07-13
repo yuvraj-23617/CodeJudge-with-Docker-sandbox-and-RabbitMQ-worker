@@ -34,10 +34,10 @@ public class SubmissionController {
         this.submissionProducer = submissionProducer;
     }
 
-    @PostMapping("/run-python")
-    public String runPython(@RequestBody String code) {
-        return judgeService.executePython(code);
-    }
+//    @PostMapping("/run-python")
+//    public String runPython(@RequestBody String code) {
+//        return judgeService.executePython(code);
+//    }
 
     // Add this inside your SubmissionController class
     @GetMapping("/submissions/{id}")

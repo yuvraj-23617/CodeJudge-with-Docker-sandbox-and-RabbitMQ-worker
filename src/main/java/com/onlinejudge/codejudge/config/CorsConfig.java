@@ -23,7 +23,8 @@ public class CorsConfig {
 
                 // IntelliJ built-in server
                 "http://localhost:63342",
-                "http://127.0.0.1:63342"
+                "http://127.0.0.1:63342",
+                "http://localhost:8081"
         ));
 
         configuration.setAllowedMethods(List.of(

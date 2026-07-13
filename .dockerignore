@@ -1,0 +1,30 @@
+# IDE
+.idea/
+*.iml
+
+# Build artifacts
+build/
+.gradle/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Frontend is built separately
+Frontend/
+
+# Environment files
+.env
+
+# Documentation
+*.md
+README.md
+HELP.md
+
+# Temp files
+tmp/
+temp/
+*.tmp
+
+# Node modules
+node_modules/
