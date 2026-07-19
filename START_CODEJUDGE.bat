@@ -30,7 +30,15 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: 3. Check if ports are available
+:: 3. Pre-pull execution images (so first submission is instant)
+echo [INFO] Pre-pulling Docker images for Python, Java, and C++...
+echo This may take 2-3 minutes on the first run.
+docker pull python:3.11
+docker pull eclipse-temurin:21
+docker pull gcc:13
+echo.
+
+:: 4. Check if ports are available
 echo [INFO] Checking if ports 8080 and 8081 are available...
 netstat -ano | findstr :8080 >nul
 if %errorlevel% equ 0 (
@@ -50,7 +58,7 @@ if %errorlevel% equ 0 (
     exit /b 1
 )
 
-:: 4. Build and start all services
+:: 5. Build and start all services
 echo [INFO] Building and starting services...
 echo This may take 3-5 minutes on the first run.
 echo.
@@ -67,7 +75,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: 5. Wait for backend to be healthy
+:: 6. Wait for backend to be healthy
 echo.
 echo [INFO] Waiting for backend to become healthy...
 
